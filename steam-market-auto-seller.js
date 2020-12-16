@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Market AutoSeller
 // @description  Adds new "AutoSell" button near "Sell" to set selling price, tick SSA checkbox, confirm sale & close dialog automatically. Also trims too long card descriptions & hides "Scrap" section.
-// @version      1.0.1
+// @version      1.0.2
 // @author       Silmaril
 // @namespace    https://github.com/SOLiNARY
 // @downloadURL  https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.js
@@ -17,11 +17,13 @@
     'use strict';
 
     toastr.options = {"positionClass": "toast-bottom-right"};
+    let evt = document.createEvent("HTMLEvents");
     let head = document.getElementsByTagName('head')[0];
     let toastrStyleHTML = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">';
     let buttonStyleHTML = '<style>.item_market_actions .item_market_action_button_edge.item_market_action_button_right{margin-right:10px;}</style>';
     const autoSellButtonHTML = '<a class="auto_sell_button item_market_action_button item_market_action_button_green" href="#"><span class="item_market_action_button_edge item_market_action_button_left"></span><span class="item_market_action_button_contents">AutoSell</span><span class="item_market_action_button_edge item_market_action_button_right"></span><span class="item_market_action_button_preload"></span></a>';
     head.innerHTML = toastrStyleHTML + buttonStyleHTML + head.innerHTML;
+    evt.initEvent("keyup", false, true);
 
     $(document).on("click", ".auto_sell_button", async function(e){
         e.preventDefault();
@@ -33,11 +35,9 @@
             return;
         }
         let delimiter = priceBlock.search(" USD<br>");
-        let minPrice = Number(priceBlock.substring(0, delimiter).replace(/[^0-9.-]+/g,"")).toFixed(2);
-        let price = minPrice < 0.04 ? 0.03 : minPrice - 0.01;
+        let minPrice = Number(priceBlock.substring(0, delimiter).replace(/[^0-9.-]+/g,""));
+        let price = minPrice < 0.04 ? 0.03 : (minPrice - 0.01).toFixed(2);
         document.getElementById('market_sell_buyercurrency_input').value = '$' + price;
-        let evt = document.createEvent("HTMLEvents"); // move global
-        evt.initEvent("keyup", false, true);
         $("market_sell_buyercurrency_input").dispatchEvent(evt);
         document.getElementById('market_sell_dialog_accept_ssa').checked = true;
         $("market_sell_dialog_accept").click()

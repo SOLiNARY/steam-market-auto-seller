@@ -16,7 +16,6 @@
 (function() {
     'use strict';
 
-    toastr.options = {"positionClass": "toast-bottom-right"};
     let evt = document.createEvent("HTMLEvents");
     let head = document.getElementsByTagName('head')[0];
     let toastrStyleHTML = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"/>';

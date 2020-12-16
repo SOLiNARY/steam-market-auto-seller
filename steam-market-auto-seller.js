@@ -48,7 +48,7 @@
         toastr.success("$" + price + " " + cardName);
     });
 
-    $(document).on("click", ".item.context6", function(e){
+    $(document).on("click", ".item", function(e){
         let sell0btn = document.querySelector("#iteminfo0_item_market_actions > a.item_market_action_button");
         let sell1btn = document.querySelector("#iteminfo1_item_market_actions > a.item_market_action_button");
         let description0div = document.querySelector("#iteminfo0_item_descriptors > div");

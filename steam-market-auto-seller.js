@@ -9,7 +9,7 @@
 // @license      MIT License
 // @copyright    Copyright (C) 2020, by Silmaril
 // @match        *://steamcommunity.com/id/*/inventory
-// @require      https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js
+// @require      https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/min/toastr.min.js
 // @grant        none
 // ==/UserScript==
 
@@ -19,10 +19,9 @@
     toastr.options = {"positionClass": "toast-bottom-right"};
     let evt = document.createEvent("HTMLEvents");
     let head = document.getElementsByTagName('head')[0];
-    let toastrStyleHTML = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">';
-    let buttonStyleHTML = '<style>.item_market_actions .item_market_action_button_edge.item_market_action_button_right{margin-right:10px;}</style>';
+    let toastrStyleHTML = '<link rel="stylesheet" href="https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/min/toastr.min.css">';
     const autoSellButtonHTML = '<a class="auto_sell_button item_market_action_button item_market_action_button_green" href="#"><span class="item_market_action_button_edge item_market_action_button_left"></span><span class="item_market_action_button_contents">AutoSell</span><span class="item_market_action_button_edge item_market_action_button_right"></span><span class="item_market_action_button_preload"></span></a>';
-    head.innerHTML = toastrStyleHTML + buttonStyleHTML + head.innerHTML;
+    head.innerHTML = toastrStyleHTML + head.innerHTML;
     evt.initEvent("keyup", false, true);
 
     $(document).on("click", ".auto_sell_button", async function(e){
@@ -38,7 +37,7 @@
         }
         let decimalPlaces = CountDecimalPlaces(priceParsed);
         let minimalDecrement = 10 ** -decimalPlaces;
-        let price = priceParsed < 4 * minimalDecrement ? 3 * minimalDecrement: (priceParsed - minimalDecrement).toFixed(decimalPlaces);
+        let price = priceParsed < 4 * minimalDecrement ? 3 * minimalDecrement : (priceParsed - minimalDecrement).toFixed(decimalPlaces);
         document.getElementById('market_sell_buyercurrency_input').value = price;
         $("market_sell_buyercurrency_input").dispatchEvent(evt);
         document.getElementById('market_sell_dialog_accept_ssa').checked = true;

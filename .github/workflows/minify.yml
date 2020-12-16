@@ -17,10 +17,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Minify Action
-        uses: SOLiNARY/steam-market-auto-seller
+      - name: Auto Minify
+        uses: nizarmah/auto-minify@master
+        with:
+          directory: 'res'
+          output: 'min'
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Minify source code
+          repository: 'min'
+          commit_message: 'Github Action: Auto Minified JS and CSS files'
           branch: ${{ github.ref }}

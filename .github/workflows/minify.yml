@@ -18,7 +18,7 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Minify Action
-        uses: SOLiNARY/steam-market-auto-seller
+        uses: ${{ github.ref }}
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:

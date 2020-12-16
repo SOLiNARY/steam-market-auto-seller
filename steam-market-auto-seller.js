@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Market AutoSeller
 // @description  Adds new "AutoSell" button near "Sell" to set selling price, tick SSA checkbox, confirm sale & close dialog automatically. Also trims too long card descriptions & hides "Scrap" section.
-// @version      1.0.2
+// @version      1.0.3
 // @author       Silmaril
 // @namespace    https://github.com/SOLiNARY
 // @downloadURL  https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.js
@@ -43,13 +43,16 @@
         $("market_sell_dialog_accept").click()
         $("market_sell_dialog_ok").click();
         while (document.querySelector(".newmodal .newmodal_buttons .btn_grey_steamui") == null){
-            await sleep(100);
+            await Sleep(100);
         }
         document.querySelector(".newmodal .newmodal_buttons .btn_grey_steamui").click();
         toastr.success("$" + price + " " + cardName);
     });
 
-    $(document).on("click", ".item", function(e){
+    $(document).on("click", ".inventory_page div.item", AddAutoSellBtn);
+    $(document).on("click", ".games_list_tabs a.games_list_tab", AddAutoSellBtn);
+
+    function AddAutoSellBtn(){
         let sell0btn = document.querySelector("#iteminfo0_item_market_actions > a.item_market_action_button");
         let sell1btn = document.querySelector("#iteminfo1_item_market_actions > a.item_market_action_button");
         let description0div = document.querySelector("#iteminfo0_item_descriptors > div");
@@ -84,9 +87,9 @@
         if (scrap1div != null){
             scrap1div.remove();
         }
-    });
+    }
 
-    function sleep(ms) {
+    function Sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Market AutoSeller
 // @description  Adds new "AutoSell" button near "Sell" to set selling price, tick SSA checkbox, confirm sale & close dialog automatically. Also trims too long card descriptions & hides "Scrap" section.
-// @version      1.0.3
+// @version      1.0.4
 // @author       Silmaril
 // @namespace    https://github.com/SOLiNARY
 // @downloadURL  https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.js
@@ -30,14 +30,16 @@
         let cardName = e.path[4].querySelector(".item_desc_content > .item_desc_description > h1").textContent;
         let priceBlock = e.path[2].querySelector(".item_market_actions > div > div:nth-child(2)").innerHTML;
         SellCurrentSelection();
-        if (priceBlock.search("There are no listings currently available for this item.") == 0){
+        let delimiter = priceBlock.search("<br>");
+        let priceParsed = Number(priceBlock.substring(0, delimiter).replace(/[^0-9.-]+/g,""));
+        if (isNaN(priceParsed)){
             toastr.error("No lots to compare!");
             return;
         }
-        let delimiter = priceBlock.search(" USD<br>");
-        let minPrice = Number(priceBlock.substring(0, delimiter).replace(/[^0-9.-]+/g,""));
-        let price = minPrice < 0.04 ? 0.03 : (minPrice - 0.01).toFixed(2);
-        document.getElementById('market_sell_buyercurrency_input').value = '$' + price;
+        let decimalPlaces = CountDecimalPlaces(priceParsed);
+        let minimalDecrement = 10 ** -decimalPlaces;
+        let price = priceParsed < 4 * minimalDecrement ? 3 * minimalDecrement: (priceParsed - minimalDecrement).toFixed(decimalPlaces);
+        document.getElementById('market_sell_buyercurrency_input').value = price;
         $("market_sell_buyercurrency_input").dispatchEvent(evt);
         document.getElementById('market_sell_dialog_accept_ssa').checked = true;
         $("market_sell_dialog_accept").click()
@@ -46,7 +48,7 @@
             await Sleep(100);
         }
         document.querySelector(".newmodal .newmodal_buttons .btn_grey_steamui").click();
-        toastr.success("$" + price + " " + cardName);
+        toastr.success(price + " " + cardName);
     });
 
     $(document).on("click", ".inventory_page div.item", AddAutoSellBtn);
@@ -87,6 +89,19 @@
         if (scrap1div != null){
             scrap1div.remove();
         }
+    }
+
+    function CountDecimalPlaces(value) {
+        let text = value.toString()
+        if (text.indexOf('e-') > -1) {
+            let [base, trail] = text.split('e-');
+            let deg = parseInt(trail, 10);
+            return deg;
+        }
+        if (Math.floor(value) !== value) {
+            return value.toString().split(".")[1].length || 0;
+        }
+        return 0;
     }
 
     function Sleep(ms) {

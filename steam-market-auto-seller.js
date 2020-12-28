@@ -5,7 +5,7 @@
 // @author       Silmaril
 // @namespace    https://github.com/SOLiNARY
 // @downloadURL  https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.js
-// @updateURL    https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.js
+// @updateURL    https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.meta.js
 // @license      MIT License
 // @copyright    Copyright (C) 2020, by Silmaril
 // @match        *://steamcommunity.com/id/*/inventory
@@ -16,6 +16,7 @@
 (function() {
     'use strict';
 
+    toastr.options = {"positionClass": "toast-bottom-right"};
     let evt = document.createEvent("HTMLEvents");
     let head = document.getElementsByTagName('head')[0];
     let toastrStyleHTML = '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css"/>';
@@ -30,14 +31,15 @@
         let priceBlock = e.path[2].querySelector(".item_market_actions > div > div:nth-child(2)").innerHTML;
         SellCurrentSelection();
         let delimiter = priceBlock.search("<br>");
-        let priceParsed = Number(priceBlock.substring(0, delimiter).replace(/[^0-9.-]+/g,""));
+        let priceRaw = priceBlock.substring(0, delimiter).replace(/[^0-9.-]+/g,"")
+        let priceParsed = Number(priceRaw);
         if (isNaN(priceParsed)){
             toastr.error("No lots to compare!");
             return;
         }
-        let decimalPlaces = CountDecimalPlaces(priceParsed);
-        let minimalDecrement = 10 ** -decimalPlaces;
-        let price = priceParsed < 4 * minimalDecrement ? 3 * minimalDecrement : (priceParsed - minimalDecrement).toFixed(decimalPlaces);
+        let minimalDecrement = IsFractional(priceParsed) ? 0.01 : 1;
+        let price = priceParsed < 4 * minimalDecrement ? 3 * minimalDecrement : priceParsed - minimalDecrement;
+        price = price.toFixed(2);
         document.getElementById('market_sell_buyercurrency_input').value = price;
         $("market_sell_buyercurrency_input").dispatchEvent(evt);
         document.getElementById('market_sell_dialog_accept_ssa').checked = true;
@@ -90,17 +92,8 @@
         }
     }
 
-    function CountDecimalPlaces(value) {
-        let text = value.toString()
-        if (text.indexOf('e-') > -1) {
-            let [base, trail] = text.split('e-');
-            let deg = parseInt(trail, 10);
-            return deg;
-        }
-        if (Math.floor(value) !== value) {
-            return value.toString().split(".")[1].length || 0;
-        }
-        return 0;
+    function IsFractional(value) {
+        return value.indexOf('.') > -1 || value.indexOf(',') > -1;
     }
 
     function Sleep(ms) {

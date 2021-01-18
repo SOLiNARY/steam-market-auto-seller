@@ -1,7 +1,3 @@
-.item_market_actions .item_market_action_button_edge.item_market_action_button_right {
-    margin-right: 10px;
-}
-
 a.auto_sell_button {
     float: right;
 }
@@ -11,4 +7,5 @@ input.steam-market-auto-seller_sell-delta {
     padding: 0 0.5em;
     float: right;
     width: 4em;
+    margin-left: 10px;
 }

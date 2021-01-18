@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Market AutoSeller
 // @description  Adds new "AutoSell" button near "Sell" to set selling price, tick SSA checkbox, confirm sale & close dialog automatically. Also trims too long card descriptions & hides "Gems" section.
-// @version      1.0.8
+// @version      1.1.0
 // @author       Silmaril
 // @namespace    https://github.com/SOLiNARY
 // @downloadURL  https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.user.js
@@ -9,6 +9,8 @@
 // @license      MIT License
 // @copyright    Copyright (C) 2020, by Silmaril
 // @match        *://steamcommunity.com/id/*/inventory*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js
-// @grant        none
+// @resource     SELLER_CSS https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.css
+// @resource     SELLER_HTML https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/auto-sell-block.html
+// @grant        GM_getResourceText
+// @grant        GM_addStyle
 // ==/UserScript==

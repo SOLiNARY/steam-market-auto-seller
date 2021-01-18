@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Market AutoSeller
 // @description  Adds new "AutoSell" button near "Sell" to set selling price, tick SSA checkbox, confirm sale & close dialog automatically. Also trims too long card descriptions & hides "Gems" section.
-// @version      1.0.8
+// @version      1.1.0
 // @author       Silmaril
 // @namespace    https://github.com/SOLiNARY
 // @downloadURL  https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.user.js
@@ -25,6 +25,10 @@
     let evt = document.createEvent("HTMLEvents");
     evt.initEvent("keyup", false, true);
 
+    if (localStorage.getItem('steam-market-auto-seller_sell-delta') == null) {
+        localStorage.setItem('steam-market-auto-seller_sell-delta', -0.01);
+    }
+
     $(document).on("click", ".auto_sell_button", async function(e) {
         e.preventDefault();
         let cardName = e.path[4].querySelector(".item_desc_content > .item_desc_description > h1").textContent;
@@ -37,8 +41,8 @@
             console.warn("No lots to compare!");
             return;
         }
-        let minimalDecrement = IsFractional(priceRaw) ? 0.01 : 1;
-        let price = priceParsed < 4 * minimalDecrement ? 3 * minimalDecrement : priceParsed - minimalDecrement;
+        let priceSellDelta = Number(localStorage.getItem('steam-market-auto-seller_sell-delta'));
+        let price = priceParsed < 0.04 ? 0.03 : priceParsed + priceSellDelta;
         price = price.toFixed(2);
         document.getElementById('market_sell_buyercurrency_input').value = price;
         $("market_sell_buyercurrency_input").dispatchEvent(evt);
@@ -50,6 +54,11 @@
         }
         document.querySelector(".newmodal .newmodal_buttons .btn_grey_steamui").click();
         console.info(price + " " + cardName);
+    });
+
+    $(document).on("change", ".steam-market-auto-seller_sell-delta", function(e) {
+        e.preventDefault();
+        localStorage.setItem('steam-market-auto-seller_sell-delta', e.target.value);
     });
 
     $(document).on("click", ".inventory_page div.item", AddAutoSellBtn);
@@ -90,10 +99,14 @@
         if (scrap1div != null) {
             scrap1div.remove();
         }
-    }
-
-    function IsFractional(value) {
-        return value.indexOf('.') > -1 || value.indexOf(',') > -1;
+        let autoSellDelta = document.getElementsByClassName('steam-market-auto-seller_sell-delta');
+        let sellDelta = localStorage.getItem('steam-market-auto-seller_sell-delta');
+        if (autoSellDelta[0] != null) {
+            autoSellDelta[0].value = sellDelta;
+        }
+        if (autoSellDelta[1] != null) {
+            autoSellDelta[1].value = sellDelta;
+        }
     }
 
     function Sleep(ms) {

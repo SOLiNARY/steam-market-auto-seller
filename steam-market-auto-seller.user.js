@@ -9,8 +9,8 @@
 // @license      MIT License
 // @copyright    Copyright (C) 2020, by Silmaril
 // @match        *://steamcommunity.com/id/*/inventory*
-// @resource     SELLER_CSS https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.css#md5=07459244fd543ddd5f9f7457943e21a6,sha384=9+V/g+lOW6fUbN4jg1bi5qHvMVrVX9S8nbzRowkiUV3JjlYxWMpLB8ONzqkLzi2D
-// @resource     SELL_BTN https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/auto-sell-button.html#md5=a4d74091012b7fc781ded0e1f77837cf,sha384=upCENlOa2IaSm0sDnvpqRXxodccfPx3tLhGsfCzP3K2DKRbYJwg9ViwJo0euYXP+
+// @resource     SELLER_CSS https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/steam-market-auto-seller.css
+// @resource     SELLER_HTML https://raw.githubusercontent.com/SOLiNARY/steam-market-auto-seller/master/auto-sell-block.html
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -18,7 +18,7 @@
 (function() {
     'use strict';
 
-    const autosell_html = GM_getResourceText("SELL_BTN");
+    const seller_html = GM_getResourceText("SELLER_HTML");
     const seller_css = GM_getResourceText("SELLER_CSS");
     GM_addStyle(seller_css);
 
@@ -65,13 +65,13 @@
         if (sell0btn != null) {
             let autoSell0btn = document.querySelector("#iteminfo0_item_market_actions > a.auto_sell_button");
             if (autoSell0btn == null) {
-                sell0btn.insertAdjacentHTML('afterend', autosell_html);
+                sell0btn.insertAdjacentHTML('afterend', seller_html);
             }
         }
         if (sell1btn != null) {
             let autoSell1btn = document.querySelector("#iteminfo1_item_market_actions > a.auto_sell_button");
             if (autoSell1btn == null) {
-                sell1btn.insertAdjacentHTML('afterend', autosell_html);
+                sell1btn.insertAdjacentHTML('afterend', seller_html);
             }
         }
         if (description0div != null) {

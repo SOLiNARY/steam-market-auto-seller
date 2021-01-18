@@ -1,0 +1,10 @@
+.item_market_actions .item_market_action_button_edge.item_market_action_button_right {
+    margin-right: 10px;
+}
+
+input.steam_market_auto_seller-sell_for {
+    margin-bottom: 4px;
+    padding: 0 0.5em;
+    float: right;
+    width: 7em;
+}

@@ -31,7 +31,6 @@
 
     $(document).on("click", ".auto_sell_button", async function(e) {
         e.preventDefault();
-        console.log(e);
         let targetParent = e.target.getOffsetParent();
         let cardName = targetParent.querySelector(".item_desc_content > .item_desc_description > h1").textContent;
         let priceBlock = targetParent.querySelector(".item_market_actions > div > div:nth-child(2)").innerHTML;
